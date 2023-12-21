@@ -1,0 +1,16 @@
+config:
+  partial_parse: true
+
+spark-dbt-analysis:
+  outputs:
+    dbt-dev:
+      type: postgres
+      threads: 8
+      host: "{{ env_var('POSTGRES_HOST') }}"
+      port: 5432
+      user: "{{ env_var('POSTGRES_USER') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD') }}"
+      dbname: "{{ env_var('POSTGRES_DB') }}"
+      schema: "{{ env_var('POSTGRES_SCHEMA') }}"
+
+  target: dbt-dev

@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: agg_approval_analysis
+    description: |
+      For an application to be not approved, it either has to still be in pending state or rejected. Pending state
+      would mean that there is an application in review that hasn't been approved or rejected. Therefore, the
+      percentage of approval will be (pending+rejected) / total_reviewed.
+    tests:
+      - dbt_utils.expression_is_true:
+          name: test_whether_approved_not_approved_100_percent
+          expression: " not_approved + approved = 1 "
+    columns:
+      - name: not_approved
+        description: percentage of those not approved.
+        tests:
+          - not_null
+      - name: approved
+        description: percentage of those approved.
+  - name: agg_dropoff_analysis
+    description: |
+      The application funnel goes from: application_received -> application_submitted -> application_completed -> application_reviewed -> application_accepted or application_rejected.
+      To calculate the dropoff, we will need to grab the count of each vertical and then compare the current to the prior.
+      In order to ensure that records are null are not dropoffs; we calculate the average time it takes a user to go from
+      application received to accepted. If a particular comparsion ie: application_received -> application_submitted is null and then
+      average application approved time is less than the time application_received, then we will mark this record as pending and
+      will not consider this a dropoff.
+    columns:
+      - name: dropoff_submmision_pt
+        description: Dropoff submission percentage based on application_received.
+      - name: dropoff_complete_pt
+        description: Dropoff completion percentage based on application_submitted.
+      - name: dropoff_review_pt
+        description: Dropoff review percentage based on application_complete.
+      - name: dropoff_approved_pt
+        description: Dropoff approved percentage based on application_reviewed.
+      - name: dropoff_rejected_pt
+        description: Dropoff rejected percentage based on application_reviewed.
+  - name: agg_stage_funnel
+    description: Count of all the different stages within the application and only taking the latest and record CDC record for the user.
+    columns:
+      - name: count_of_application_submitted
+        description: count of users who had an application submitted.
+      - name: count_of_application_received
+        description: count of users who had an application received.
+      - name: count_of_application_reviewed
+        description: count of users who had an application reviewed.
+      - name: count_of_application_rejected
+        description: count of users who had an application rejected.
+      - name: count_of_application_approved
+        description: count of users who had an application approved.
+      - name: count_of_application_complete
+        description: count of users who had an application complete.

@@ -1,0 +1,123 @@
+version: 2
+
+sources:
+  - name : public
+    tables:
+      - name: applications
+        description: Application data.
+        tests:
+          - dbt_utils.expression_is_true:
+              name: test_valid_timestamp_application_approved
+              expression: " length(application_approved) = 19 "
+          - dbt_utils.expression_is_true:
+              name: test_valid_timestamp_application_complete
+              expression: " length(application_complete) = 19 "
+          - dbt_utils.expression_is_true:
+              name: test_valid_timestamp_application_received
+              expression: " length(application_received) = 19 "
+          - dbt_utils.expression_is_true:
+              name: test_valid_timestamp_application_rejected
+              expression: " length(application_rejected) = 19 "
+          - dbt_utils.expression_is_true:
+              name: test_valid_timestamp_application_reviewed
+              expression: " length(application_reviewed) = 19 "
+          - dbt_utils.expression_is_true:
+              name: test_valid_timestamp_application_submitted
+              expression: " length(application_submitted) = 19 "
+        columns:
+          - name: user_id
+            description: unique id representing each account.
+            tests:
+              - not_null
+          - name: application_approved
+            description: Time of application approval.
+          - name: application_complete
+            description: Time of application complete.
+          - name: application_received
+            description: Time of application received.
+          - name: application_rejected
+            description: Time of application rejected.
+          - name: application_reviewed
+            description: Time of application reviewed.
+          - name: application_submitted
+            description: Time of application submitted.
+      - name: clicks
+        description: Click data.
+        columns:
+          - name: user_id
+            description: unique id representing each account.
+            tests:
+              - not_null
+          - name: click_screen
+            description: click screen.
+          - name: click_ts
+            description: click timestamp.
+          - name: click_verified
+            description: click verified.
+          - name: click_xy
+            description: some click metric.
+      - name: metadata
+        description: metadata information.
+        columns:
+          - name: user_id
+            description: user id.
+            tests:
+              - not_null
+          - name: commit-timestamp
+            description: commit timestamp.
+          - name: operation
+            description: transaction status.
+          - name: partition-key-type
+            description: partition key.
+          - name: record-type
+            description: record type.
+          - name: schema-name
+            description: schema name.
+          - name: stream-position
+            description: stream position.
+          - name: table-name
+            description: table name.
+          - name: timestamp
+            description: timestamp.
+          - name: transaction-id
+            description: transaction id.
+          - name: transaction-record-id
+            description: transaction record.
+      - name: users
+        columns:
+          - name: user_id
+            description: user_id
+            tests:
+              - not_null
+          - name: id
+            description: id.
+          - name: first_name
+            description: first_name.
+            tests:
+              - dbt_utils.expression_is_true:
+                  name: test_special_characters
+                  expression: " !~ '[^A-Za-z0-9 .-]+' "
+          - name: last_name
+            description: last_name.
+            tests:
+              - dbt_utils.expression_is_true:
+                  name: test_special_characters
+                  expression: " !~ '[^A-Za-z0-9 .-]+' "
+          - name: phone_verified
+            description: phone_verified type.
+          - name: profile_finished
+            description: profile_finished name.
+          - name: spam_opt_in
+            description: spam_opt_in.
+          - name: text_opt_in
+            description: text_opt_in.
+          - name: user_flag
+            description: user_flag.
+          - name: user_onboarded
+            description: user_onboarded.
+          - name: username
+            description: username.
+            tests:
+              - dbt_utils.expression_is_true:
+                  name: test_special_characters
+                  expression: " !~ '[^A-Za-z0-9 .-]+' "

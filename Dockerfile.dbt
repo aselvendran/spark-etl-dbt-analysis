@@ -1,0 +1,23 @@
+FROM ghcr.io/dbt-labs/dbt-postgres:1.1.0
+
+
+RUN python -m pip install --upgrade pip
+RUN pip3 install psycopg2-binary==2.9.3
+
+
+WORKDIR /home/spark_dbt_analysis
+
+COPY dbt-postgres /home/spark_dbt_analysis/dbt-postgres
+
+COPY dbt-postgres/profiles.yml /root/.dbt/profiles.yml
+
+
+
+RUN cd /home/spark_dbt_analysis/dbt-postgres && dbt deps
+
+WORKDIR /home/spark_dbt_analysis/dbt-postgres
+
+ENV PYTHONPATH "${PYTHONPATH}:/home/spark_dbt_analysis"
+ENV PYTHONUNBUFFERED 1
+
+ENTRYPOINT ["bash"]

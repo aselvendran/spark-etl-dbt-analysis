@@ -1,0 +1,17 @@
+version: 2
+
+macros:
+  - name: comparison_case_clause
+    description: Case when clause to calculate dropoff of a particular application.
+    arguments:
+      - name: compare_from
+        description: Record to compare from.
+      - name: compare_to
+        description: Record to compare to.
+  - name: filter_by_table
+    description: Tables to filter from.
+    arguments:
+      - name: filter_clause
+        description: Joining filter clause.
+      - name: table_name
+        description: table to filter by.

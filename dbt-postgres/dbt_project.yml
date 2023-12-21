@@ -1,0 +1,25 @@
+name: 'de_data_yard'
+version: 1.0.0
+
+config-version: 2
+
+profile: 'spark-dbt-analysis'
+
+source-paths: ["models"]
+test-paths: ["test"]
+macro-paths: ["macros"]
+
+target-path: "target"
+
+clean-targets:
+  - "target"
+
+models:
+  de_data_yard:
+    +materialized: table
+    0_sources:
+      +schema: sources
+    1_staging:
+      +schema: staging
+    2_marts:
+      +schema: marts

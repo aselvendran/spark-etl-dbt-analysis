@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: stg__applications
+    description: Application data.
+    tests:
+      - dbt_utils.expression_is_true:
+          name: test_valid_timestamp
+          expression: " length(application_approved) = 19 "
+    columns:
+      - name: user_id
+        description: unique id representing each account.
+        tests:
+          - not_null
+      - name: application_approved
+        description: Time of application approval.
+      - name: application_complete
+        description: Time of application complete.
+      - name: application_received
+        description: Time of application received.
+      - name: application_rejected
+        description: Time of application rejected.
+      - name: application_reviewed
+        description: Time of application reviewed.
+      - name: application_submitted
+        description: Time of application submitted.
+  - name: stg__clicks
+    description: Click data.
+    columns:
+      - name: user_id
+        description: unique id representing each account.
+        tests:
+          - not_null
+      - name: click_screen
+        description: click screen.
+      - name: click_ts
+        description: click timestamp.
+      - name: click_verified
+        description: click verified.
+      - name: click_xy
+        description: some click metric.
+  - name: stg__metadata
+    columns:
+      - name: user_id
+        description: metadata information.
+        tests:
+          - not_null
+      - name: commit-timestamp
+        description: commit timestamp.
+      - name: operation
+        description: transaction status.
+      - name: partition-key-type
+        description: partition key.
+      - name: record-type
+        description: record type.
+      - name: schema-name
+        description: schema name.
+      - name: stream-position
+        description: stream position.
+      - name: table-name
+        description: table name.
+      - name: timestamp
+        description: timestamp.
+      - name: transaction-id
+        description: transaction id.
+      - name: transaction-record-id
+        description: transaction record.
+  - name: stg__users

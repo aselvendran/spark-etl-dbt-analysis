@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres
+    network_mode: etl-driver
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=kafka_data
+      - POSTGRES_USER=de_user
+      - POSTGRES_PASSWORD=helloworld
+      - POSTGRES_SCHEMA=data_set
+  spark:
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=:/opt/application/src
+      - DATA_FILE_PATH=src/ingestion_process/sample_kafka_data.json.gz
+    network_mode: etl-driver
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    volumes:
+      - .:/src
+    entrypoint: /bin/bash
+    command: -c "spark-submit src/ingestion_process/etl_process.py"
+  dbt:
+    env_file:
+      - .env
+    network_mode: etl-driver
+    build:
+      context: .
+      dockerfile: Dockerfile.dbt
+    depends_on:
+      - spark
+    entrypoint: /bin/bash
+    command: -c "sleep 240 && dbt build || true && dbt docs generate && dbt docs serve --port 8081"
+    ports:
+      - 8081:8081
