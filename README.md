@@ -68,6 +68,8 @@ filtering the CDC data into a format that can be used for this Analytics purpose
 and filtering out operation delete) and finally `2_marts` contains the analysis. Below contains the data linage of the 
 models. The definitions of the models can be available in `dbt docs`.
 
+DBT Docs can be found in the link: https://aselvendran.github.io/spark-etl-dbt-analysis/#!/overview
+
 <p align="center">
   <img src="images/dbt_data_lineage.png" width="750" height="500" title="Data Lineage">
 </p>
